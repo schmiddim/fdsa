@@ -8,7 +8,7 @@ class Blog{
 	private $dummydouble;
 	protected $title, $slogan;		
 	
-	protected $categories=array();
+	#protected $categories=array();
 	public function __construct($title, $slogan){
 		$this->title=$title;
 		$this->slogan=$slogan;

@@ -3,59 +3,42 @@
 
 class SqlGenerator{
 	private $ao;		//AanalyseObjekt
-	public function __construct(Analyse $ao){
+	private $sqlCommands=array();
+	public function __construct(Analyse $ao, Config $c){
 		$this->ao=$ao;
-	}
-	
-	/*CREATE TABLE example_timestamp (
-         id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-         data VARCHAR(100),
-         cur_timestamp TIMESTAMP(8)*/
-	private $tn="dkdkd";
-	private $templateCreate="
-						CREATE TABLE IF NOT EXISTS #TABLENAME(\n
-							id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n
-							#VALUES\n						
-						);
-						";
-	private $templateInsert="
-						INSERT  INTO #TABLENAME 
-						(#ROWS) VALUES (#VALUES)
-	
-	
-	";
-	
-	#insert into Blog (title, slogan) 
-	#VALUES( "unterklärliches am Rande", "Worte des Parteivorsitzenden");
-	
+		$this->sqlCommands=$c->get('MYSQLCOMMANDS');
+		
+		
+	}#construct
+
 	public function getInsertCommand(){
 		$rows=array();
 		$values=array();
 		foreach ($this->ao->getPropertyValues() as $key =>$value){
 			array_push($rows, $key);
+			if (is_string($value))		//Escape Strings
+				$value="'$value'";
 			array_push($values, $value);
-		}
-		$strRows=implode(',\n',$rows);
-		$strValues=implode(',\n', $values);
+		}#each
+		$strRows=implode(',',$rows);
+		$strValues=implode(',', $values);
 	
-		$sql=str_replace('#TABLENAME', $this->ao->getClassName(), $this->templateInsert);
-		$sql=str_replace('#VALUES', $strValues, $sql);
-		
+		$sql=str_replace('#TABLENAME', $this->ao->getClassName(), $this->sqlCommands['insert']);
+		$sql=str_replace('#ROWS', $strRows, $sql);
+		$sql=str_replace('#VALUES', $strValues, $sql);		
 		return str_replace("\n", '<br>', $sql);
-	}
+	}#getInsertCommand
 	
-	public function getCreateTableCommand(){
-		
-
+	public function getCreateTableCommand(){	
 		$types=array();
 		foreach ($this->ao->getPropertyTypes() as $key =>$type){
 			array_push($types,$key." ".  $this->getSqlType($type));				
 		}
-			$strTypes=implode(",\n",$types);
+			$strTypes=implode(",",$types);
 			
-		$sql=str_replace('#TABLENAME', $this->ao->getClassName(), $this->templateCreate);
+		$sql=str_replace('#TABLENAME', $this->ao->getClassName(), $this->sqlCommands['create']);
 		$sql=str_replace('#VALUES', $strTypes, $sql);			
-		return str_replace("\n", '<br>', $sql);
+		return $sql;
 	}
 	
 	
@@ -64,7 +47,7 @@ class SqlGenerator{
 			case 'integer':
 				return 'int(11)';
 			case 'double':
-				return '????';
+				return 'double';
 			case 'string':
 				return 'varchar(255)';
 			case 'array':
@@ -84,14 +67,3 @@ class SqlGenerator{
 	
 }#class
 ?>
-<!-- 
-	private function generateCreateTable(){
-		$sql = "\nCREATE TABLE IF NOT EXISTS {$this->tablename} (\n";
-		$sql.="id int(11) NOT NULL AUTO_INCREMENT,\n";
-		foreach ($this->attributeTypes as $key =>$value)
-			$sql.="$key {$this->types[$value]} DEFAULT NULL,\n";
-		$sql.= "PRIMARY KEY (`id`)\n";
-		$sql.=") ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
-		$this->createTableCommand= $sql;
-	}//generateCreateTable
-	 -->

@@ -1,20 +1,5 @@
 <?php
-class Rlegistry{
-	const KEY_DEBUGGER='debugger';
-	const KEY_DBH='dbh';
-	const KEY_DATATYPES='datatypes';
-	private static $registry = array();
-	public static function set($key, $value){
-		self::$registry[$key]=$value;
-	}//set	
-	public static function get($key){
-		if(isset(self::$registry[$key]))
-			return self::$registry[$key];
-		return null;			
-	}//get
-	
-}
-
+require_once ('Helpers/geshi/geshi.php');
 class Registry{
 	
 	/*----------singleton---------------*/
@@ -34,7 +19,7 @@ class Registry{
 	
 	const KEY_DEBUGGER='debugger';
 	const KEY_DBH='dbh';
-	
+	const KEY_CONFIG='config';
 	protected function set($key, $value){
 		$this->values[$key]=$value;
 	}#set
@@ -51,15 +36,23 @@ class Registry{
 		return $this->get(self::KEY_DEBUGGER);
 	}
 	
-	public function setDbHandle(DatabaseMySql $d){
+	public function setDbHandle(DatabaseMySql2 $d){
 		$this->set(self::KEY_DBH, $d);
 	}
 	
 	public function getDbHandle(){
 		return $this->get(self::KEY_DBH);
 	} 
+	
+	public function getConfig(){	
+		return $this->get(self::KEY_CONFIG);
+		
+	}
+	public function setConfig (Config $c){
+		$this->set(self::KEY_CONFIG, $c);
+	}
 }#registry
-
-
+/*****************************************************************************************************/
 
 ?>
+

@@ -9,15 +9,20 @@ class Config{
 		$this->values=parse_ini_file($configfile, TRUE);
 				
 	}#construct
-	public function getDebuggerConfiguration(){
+	public function getDebuggerConfig(){
 		
 	}
-	public function getDatabaseConfiguration(){
+	public function getDbConf(){
 		return $this->values['DATABASE'];	
 		
-		
-		
-	}#getDatabaseConfiguration
+	}#getDbConf
+	
+	public function get($value){
+		if (empty($this->values[$value]))
+			return null;	
+		return $this->values[$value];				
+	}#get
+	
 	public function __toString(){
 		$retval="<h1>Config</h1>";
 		foreach ($this->values as $group=>$values){

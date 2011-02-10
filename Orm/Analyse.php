@@ -26,9 +26,9 @@
 			}#reflect
 			
 			public function __toString(){
-				$retval="<h4>{$this->classname}</h4>";
+				$retval="<h1>{$this->classname}</h1>";
 				foreach ($this->propertyValues as $key=> $value)					
-					$retval.="$key :$value ,type is {$this->propertyTypes[$key]}<p>";
+					$retval.="$key :$value , {$this->propertyTypes[$key]}<p>";
 				return $retval;					
 			}#toString
 			

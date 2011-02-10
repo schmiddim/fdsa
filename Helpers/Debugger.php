@@ -42,8 +42,14 @@ class DebuggerEcho implements IDebugger
 	 * @return nothing
 	 * @access public
 	 */
-	public function debug( $message, $priority=0 ) {
+	public function debug( $message, $syntax="",$priority=0 ) {
 		if ($priority >=$this->loglevel)
+		if (!empty($syntax)){						
+			$geshi=new GeSHi($message, $syntax);
+			$geshi->set_header_type(GESHI_HEADER_DIV);
+			$message=$geshi->parse_code();
+		}
+				
 		echo date('j.m H:m:s',time()). ': ' .   $message . $this->delimiter;
 		
 	} // end of member function debug
