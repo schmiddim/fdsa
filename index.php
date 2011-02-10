@@ -1,16 +1,22 @@
 <?php 
+require_once 'Helpers/Config.php';
 require_once 'Helpers/Debugger.php';
+require_once 'Helpers/Database.php';
+require_once 'Helpers/Registry.php';
+require_once 'Helpers/Database2.php';
 require_once('content.php');
 require_once('php/blog.php');	
 require_once 'Orm/Analyse.php';
 require_once 'Orm/Manager.php';
 require_once 'Orm/SqlGenerator.php';
-require_once 'Helpers/Registry.php';
+
 
 
 $reg=Registry::getInstance();
 $reg->setDebugger(new DebuggerEcho());
+$reg->setDbHandle(new DatabaseMySql());
 $debugger=$reg->getDebugger();
+$db=$reg->getDbHandle();
 /*
 use Orm\Reflector;
 use SimpleBlog\Blog;
@@ -45,9 +51,13 @@ foreach ($categories as $c)
 
 	</div>
 	<div id="left">
-		<div id="widget"><?php #echo $recent;?></div>
-		<div id="widget"><?php #echo $archiv;?></div>
-		<div id="widget"><ul><?php #echo $blog->getCategories('<li>','</li>');?></ul></div>
+		<div id="widget"><?php 
+						$config=new Config();
+						echo $config;
+							
+						#echo $recent;?></div>
+		<div id="widget"><h1>empty</h1><?php #echo $archiv;?></div>
+		<div id="widget"><h1>empty</h1><!-- <ul><?php #echo $blog->getCategories('<li>','</li>');?></ul> --></div>
 	</div><!--left-->
 
 	<div id="center">	
@@ -55,6 +65,7 @@ foreach ($categories as $c)
 		<?
 		#echo $content1;
 		/************content****************************/
+		
 		$c = new Comment("User","neuer Kommentar");
 		$rc=new Analyse($blog);		
 		$sqlgen= new SqlGenerator($rc);
@@ -62,6 +73,10 @@ foreach ($categories as $c)
 		echo "--------------"; 
 		$debugger->debug($sqlgen->getInsertCommand());
 		echo $rc;
+	echo	$db->CommitCommand($rc,null,false);
+	 print_r($db->getLastError());
+	 print_r($db->getLastWarning());
+	
 		
 		/************content****************************/
 		?></div>

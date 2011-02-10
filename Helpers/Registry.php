@@ -1,8 +1,8 @@
 <?php
 class Rlegistry{
-	const DEBUGGER='debugger';
-	const DBH='dbh';
-	const DATATYPES='datatypes';
+	const KEY_DEBUGGER='debugger';
+	const KEY_DBH='dbh';
+	const KEY_DATATYPES='datatypes';
 	private static $registry = array();
 	public static function set($key, $value){
 		self::$registry[$key]=$value;
@@ -51,6 +51,13 @@ class Registry{
 		return $this->get(self::KEY_DEBUGGER);
 	}
 	
+	public function setDbHandle(DatabaseMySql $d){
+		$this->set(self::KEY_DBH, $d);
+	}
+	
+	public function getDbHandle(){
+		return $this->get(self::KEY_DBH);
+	} 
 }#registry
 
 

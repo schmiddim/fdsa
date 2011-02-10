@@ -25,7 +25,8 @@ interface IDatabase
 	 * @return int
 	 * @access public
 	 */
-	public function getLastId( );
+	public function setDebugger($d);
+	public function getLastId();
 
 	/**
 	 * 
@@ -84,7 +85,9 @@ class DatabaseMySql implements IDatabase
 	 * @return string
 	 * @access public
 	 */
-	
+	public function setDebugger($d){
+		
+	}
 	public function __construct(){		
 		$db = new PDO(
 				'mysql:host='.Configuration::DB_HOST.';dbname='.Configuration::DB_DATABASE.';port='.Configuration::DB_PORT, 
@@ -144,7 +147,7 @@ class DatabaseMySql implements IDatabase
 		
 		}
 	 	} catch (Exception $e){
-	 		;
+	 		echo $e;
 	 	}
 	 	$this->id= $this->dbh->lastInsertId();
 	 	$this->lastError = $stmt->errorInfo();
